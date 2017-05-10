@@ -1,16 +1,14 @@
 var request = require('request')
 var fs = require('fs')
+var dateFormat = require('dateformat')
 
 var url = 'http://rest.wufazhuce.com/OneForWeb/one/getHpinfo?strDate='
-var d = new Date()
-var downUrl = url + d.toLocaleDateString()
+var downUrl = url + dateFormat(new Date(), "yyyy-mm-dd")
 
 
 request(downUrl, ((error, res, body) => {
 		var jsonObj = JSON.parse(body)
-		// console.log(data.hpEntity.strThumbnailUrl)
-		// console.log(strThumbnailUrl)
-		// var strThumbnailUrl = 'http://image.wufazhuce.com/Fhyd_Ag795olp_HLmW4hBtObhfqT'
+		// console.log(jsonObj.hpEntity.strThumbnailUrl)
 		request(jsonObj.hpEntity.strThumbnailUrl).pipe(fs.createWriteStream(jsonObj.hpEntity.strHpTitle + '.jpg'))
 
 		var str = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">' + 
