@@ -6,9 +6,23 @@ let dateFormat = require('dateformat')
 
 {/*<img style="-webkit-user-select: none;background-position: 0px 0px, 10px 10px;background-size: 20px 20px;background-image:linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100%),linear-gradient(45deg, #eee 25%, white 25%, white 75%, #eee 75%, #eee 100%);" src="http://image.wufazhuce.com/FuB1Ga9eZ1D7zHYTdAtaDpZv3RdJ">*/}
 
-let url = 'http://v3.wufazhuce.com:8000/api/hp/bymonth/'
-let downUrl = url + dateFormat(new Date(), "yyyy-mm-dd")+'%2000:00:00?channel=wdj&version=4.0.2&uuid=ffffffff-a90e-706a-63f7-ccf973aae5ee&platform=android'
+let dataurl = 'http://v3.wufazhuce.com:8000/api/hp/bymonth/' + dateFormat(new Date(), "yyyy-mm-dd") + '%2000:00:00?channel=wdj&version=4.0.2&uuid=ffffffff-a90e-706a-63f7-ccf973aae5ee&platform=android'
 
+request(dataurl, ((error, res, body) => {
+  if (error) {
+    console.error(error)
+  } else {
+    //解析api
+    let todaydata = JSON.parse(body).data[1]
+    let imgurl = todaydata.hp_img_url
+    let title = todaydata.hp_title
+    //调用request下载图片
+    request(imgurl).pipe(fs.createWriteStream(title + '.jpg'))
+
+    console.log('Download pic successful~')
+  }
+}))
+/*
 request(downUrl, ((error, res, body) => {
   if (error) {
     console.error(error)
@@ -29,3 +43,5 @@ request(downUrl, ((error, res, body) => {
     console.log('OK~')
   }
 }))
+*/
+
